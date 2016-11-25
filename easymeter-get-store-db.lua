@@ -152,18 +152,25 @@ if ( M180 > 99999 or M180 < 5000 ) then
 end
 
 -- store tageswert
-os.execute( 'date' )
-local cmd = "wget http://conil/strom/eingabe.php?datum=" .. myDatum .. "\\&licht=" .. string.format( "%.3f", M180 ) .. "\\&heiz= -q -O /tmp/wget.txt"
+print( myDatum )
+local cmd = "wget http://conil/strom/eingabe.php?datum=" .. myDatum .. "\\&licht=" .. string.format( "%.3f", M180 ) .. "\\&heiz= -q -O /tmp/wget-easymeter-summe.txt"
 print(' speicher tageswert ' .. cmd)
 
 assert(os.execute( cmd ))
 
-local cmd = "wget http://conil/strom/eingabe-easymeter.php?datum=" .. myDatum .. "\\&w180=" .. string.format( "%.3f", M180 ) .. "\\&w170=" ..  string.format( "%.3f", M170 / 100 )  .. " -q -O /tmp/wget2.txt"
-print(' speicher easy aktuelles ' .. cmd)
+local cmd = "wget http://conil/strom/eingabe-easymeter.php?datum=" .. myDatum .. "\\&w180=" .. string.format( "%.3f", M180 ) .. "\\&w170=" ..  string.format( "%.3f", M170 / 100 )  .. " -q -O /tmp/wget-easymeter-akt.txt"
+print(' speicher easymeter aktuelle wirkleistung ' .. cmd)
 
 assert(os.execute( cmd ))
 
+-- mqtt
 
+local mqtt_msg = "{\"w180\":\"" .. string.format( "%.3f", M180 ) .. "\",\"w170\":\"" ..  string.format( "%.3f", M170 / 100 )  .. "\"}"
+print(mqtt_msg)
+local mqtt_pub = "mosquitto_pub -h localhost -m '" .. mqtt_msg .. "' -t hw/easymeter"
+print(mqtt_pub)
+assert(os.execute( mqtt_pub ))
 
+-- hw/youless {"pwr":"0","cnt":"8290.002"}
 print("fini.")
                 
