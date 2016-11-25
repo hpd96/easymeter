@@ -1,0 +1,9 @@
+# Datei /etc/systemd/system/easymeter.service
+[Unit]
+Description=start easymeter reading
+
+[Service]
+ExecStart=/home/pi/easymeter/easymeter-get-store-db.lua &> /tmp/easymeter-5min.txt
+
+[Install]
+WantedBy=multi-user.target
