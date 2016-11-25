@@ -166,11 +166,10 @@ assert(os.execute( cmd ))
 -- mqtt
 
 local mqtt_msg = "{\"w180\":\"" .. string.format( "%.3f", M180 ) .. "\",\"w170\":\"" ..  string.format( "%.3f", M170 / 100 )  .. "\"}"
-print(mqtt_msg)
 local mqtt_pub = "mosquitto_pub -h localhost -m '" .. mqtt_msg .. "' -t hw/easymeter"
-print(mqtt_pub)
 assert(os.execute( mqtt_pub ))
 
--- hw/youless {"pwr":"0","cnt":"8290.002"}
+-- hw/easymeter {"w180":"12500.535","w170":"278.670"}
+
 print("fini.")
                 
