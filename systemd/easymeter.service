@@ -3,7 +3,7 @@
 Description=start easymeter reading
 
 [Service]
-ExecStart=/home/pi/easymeter/easymeter-get-store-db.lua &> /tmp/easymeter-5min.txt
+ExecStart=/home/pi/easymeter/easymeter-get-store-db.lua > /tmp/easymeter-5min.txt 2>&1
 
 [Install]
 WantedBy=multi-user.target

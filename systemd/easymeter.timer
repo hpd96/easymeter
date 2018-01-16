@@ -3,7 +3,7 @@ Description=easymeter auslesen alle 5min
 
 [Timer]
 OnActiveSec=30s
-OnUnitActiveSec=5m
+OnUnitActiveSec=2m
 
 [Install]
 WantedBy=basic.target

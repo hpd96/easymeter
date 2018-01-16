@@ -22,7 +22,7 @@ end
 --
 
 myYear = tonumber(os.date("%Y"))
-if ( myYear > 2017 or myYear < 2014 ) then
+if ( myYear > 2032 or myYear < 2014 ) then
 	print("date not set")
 	print(".")                                                         
 	os.execute( '/usr/sbin/ntpdate ptbtime1.ptb.de' )
@@ -31,7 +31,7 @@ end
 
 	
 myYear = tonumber(os.date("%Y"))
-if ( myYear > 2017 or myYear < 2014 ) then
+if ( myYear > 2032 or myYear < 2014 ) then
 	print("date not set")
 	os.exit(1)
 end
