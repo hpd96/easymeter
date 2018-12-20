@@ -64,15 +64,20 @@ until t == SML_START_SEQUENCE
 
 
 -- decode
- 
-PP=181
-L=34
-A=txt:sub(PP,PP+L-1)
-print( "hersteller " ..  msg:sub(89+13,89+13+4) )
 
-PP=PP+L
+lenMsg=string.byte(msg,28)-1
+modell = msg:sub(28+1,28+1+lenMsg-1)
+print( "modell " .. modell )
+
+lenMsg=string.byte(msg,103)
+hersteller = msg:sub(103+1,103+1+lenMsg-1)
+print( "hersteller " .. hersteller )
+
+
+PP=215
 L=48
 A=txt:sub(PP,PP+L-1)
+-- print (A)
 -- print( A:sub(31,31+16-1) )
 local M180 = tonumber(A:sub(31,31+16-1), 16) / 10000000
 print( 'M180 wirkarbeit zaehler sum: ' .. string.format( "%.3f", M180 ) .. " kWh" )
@@ -81,7 +86,8 @@ print( 'M180 wirkarbeit zaehler sum: ' .. string.format( "%.3f", M180 ) .. " kWh
 PP=PP+L
 L=40
 A=txt:sub(PP,PP+L-1)
--- print ( 'cc ' ..  A )
+-- print ( A )
+-- print(A:sub(31,31+8-1))
 local M181 = tonumber(A:sub(31,31+8-1), 16) / 100
 print( 'M181 zaehler t1 ' .. string.format( "%.3f", M181 ) .. " kWh" )
 
@@ -161,11 +167,13 @@ local cmd = "wget http://conil/strom/eingabe.php?datum=" .. myDatum .. "\\&licht
 print(' speicher tageswert ' .. cmd)
 
 assert(os.execute( cmd ))
+assert(os.execute( "chmod +rw /tmp/wget-easymeter-summe.txt" ))
 
 local cmd = "wget http://conil/strom/eingabe-easymeter.php?datum=" .. myDatum .. "\\&w180=" .. string.format( "%.3f", M180 ) .. "\\&w170=" ..  string.format( "%.3f", M170 )  .. " -q -O /tmp/wget-easymeter-akt.txt"
 print(' speicher easymeter aktuelle wirkleistung ' .. cmd)
 
 assert(os.execute( cmd ))
+assert(os.execute( "chmod +rw /tmp/wget-easymeter-akt.txt" ))
 
 -- send values via mqtt to openhab
 
