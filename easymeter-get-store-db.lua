@@ -78,53 +78,57 @@ PP=215
 L=48
 A=txt:sub(PP,PP+L-1)
 -- print (A)
--- print( A:sub(31,31+16-1) )
+meas_key = 'M' .. string.format( "%d", tonumber( A:sub(9,10) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(11,12) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(13,14) ,16) )
 local M180 = tonumber(A:sub(31,31+16-1), 16) / 10000000
-print( 'M180 wirkarbeit zaehler sum: ' .. string.format( "%.3f", M180 ) .. " kWh" )
-
+print( meas_key .. ' wirkarbeit zaehler sum: ' .. string.format( "%.3f", M180 ) .. " kWh" )
 
 PP=PP+L
 L=40
 A=txt:sub(PP,PP+L-1)
 -- print ( A )
--- print(A:sub(31,31+8-1))
+meas_key = 'M' .. string.format( "%d", tonumber( A:sub(9,10) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(11,12) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(13,14) ,16) )
 local M181 = tonumber(A:sub(31,31+8-1), 16) / 100
-print( 'M181 zaehler t1 ' .. string.format( "%.3f", M181 ) .. " kWh" )
+print( meas_key .. ' zaehler t1 ' .. string.format( "%.3f", M181 ) .. " kWh" )
 
 PP=PP+L
 L=40
 A=txt:sub(PP,PP+L-1)
 -- print ( A )
+meas_key = 'M' .. string.format( "%d", tonumber( A:sub(9,10) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(11,12) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(13,14) ,16) )
 local M182 = tonumber(A:sub(31,31+8-1), 16) / 100
-print( 'M182 zaehler t2 ' .. string.format( "%.3f", M182 ) .. " kWh" )
+print( meas_key .. ' zaehler t2 ' .. string.format( "%.3f", M182 ) .. " kWh" )
 
 PP=PP+L
 L=40
 A=txt:sub(PP,PP+L-1)
 -- print ( A )
+meas_key = 'M' .. string.format( "%d", tonumber( A:sub(9,10) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(11,12) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(13,14) ,16) )
 local M170 = tonumber(A:sub(31,31+8-1), 16) / 100
-print( 'M170 wirkleistung 3phasig ' .. string.format( "%.3f", M170 ) .. " W" )
+print( meas_key .. ' wirkleistung 3phasig ' .. string.format( "%.3f", M170 ) .. " W" )
 
 PP=PP+L
 L=40
 A=txt:sub(PP,PP+L-1)
 -- print ( A )
+meas_key = 'M' .. string.format( "%d", tonumber( A:sub(9,10) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(11,12) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(13,14) ,16) )
 local M2170 = tonumber(A:sub(31,31+8-1), 16) / 100
-print( 'M2170 wirkleistung L1 ' .. string.format( "%.3f", M2170 ) .. " W" )
+print( meas_key .. ' wirkleistung L1 ' .. string.format( "%.3f", M2170 ) .. " W" )
 
 PP=PP+L
 L=40
 A=txt:sub(PP,PP+L-1)
 -- print ( A )
+meas_key = 'M' .. string.format( "%d", tonumber( A:sub(9,10) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(11,12) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(13,14) ,16) )
 local M4170 = tonumber(A:sub(31,31+8-1), 16) / 100
-print( 'M4170 wirkleistung L2 ' .. string.format( "%.3f", M4170 ) .. " W" )
+print( meas_key .. ' wirkleistung L2 ' .. string.format( "%.3f", M4170 ) .. " W" )
 
 PP=PP+L
 L=40
 A=txt:sub(PP,PP+L-1)
 -- print ( A )
+meas_key = 'M' .. string.format( "%d", tonumber( A:sub(9,10) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(11,12) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(13,14) ,16) )
 local M6170 = tonumber(A:sub(31,31+8-1), 16) / 100
-print( 'M6170 wirkleistung L3 ' .. string.format( "%.3f", M6170 ) .. " W" )
+print( meas_key .. ' wirkleistung L3 ' .. string.format( "%.3f", M6170 ) .. " W" )
 
 
 -- plausibel?
@@ -167,19 +171,20 @@ local cmd = "wget http://conil/strom/eingabe.php?datum=" .. myDatum .. "\\&licht
 print(' speicher tageswert ' .. cmd)
 
 assert(os.execute( cmd ))
-assert(os.execute( "chmod +rw /tmp/wget-easymeter-summe.txt" ))
+assert(os.execute( "chmod a+rw /tmp/wget-easymeter-summe.txt" ))
 
 local cmd = "wget http://conil/strom/eingabe-easymeter.php?datum=" .. myDatum .. "\\&w180=" .. string.format( "%.3f", M180 ) .. "\\&w170=" ..  string.format( "%.3f", M170 )  .. " -q -O /tmp/wget-easymeter-akt.txt"
 print(' speicher easymeter aktuelle wirkleistung ' .. cmd)
 
 assert(os.execute( cmd ))
-assert(os.execute( "chmod +rw /tmp/wget-easymeter-akt.txt" ))
+assert(os.execute( "chmod a+rw /tmp/wget-easymeter-akt.txt" ))
 
 -- send values via mqtt to openhab
 
 local mqtt_topic = "hw/easymeter"
 local mqtt_host = "localhost"
-local mqtt_msg = "{\"w180\":\"" .. string.format( "%.3f", M180 ) .. "\",\"w170\":\"" ..  string.format( "%.3f", M170 )  .. "\"}"
+local mqtt_msg = "{\"w180\":\"" .. string.format( "%.3f", M180 ) .. "\",\"w170\":\"" ..  string.format( "%.3f", M170 )  .. "\"" 
+  .. ",\"model\":\"" .. modell  .. "\"" .. "}"
 local mqtt_pub = "mosquitto_pub -h " .. mqtt_host .. " -m '" .. mqtt_msg .. "' -t " .. mqtt_topic
 print(" mqtt pub")
 assert(os.execute( mqtt_pub ))
