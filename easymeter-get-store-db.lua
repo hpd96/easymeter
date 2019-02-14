@@ -65,7 +65,7 @@ until t == SML_START_SEQUENCE
 
 -- decode
 
-print(txt)
+-- print(txt)
 
 lenMsg=string.byte(msg,10)-1
 lenMsg=6
@@ -74,14 +74,14 @@ print( "modell " .. modell )
 
 lenMsg=string.byte(msg,31)
 lenMsg=3
-hersteller = msg:sub(31+1,31+1+lenMsg)
+hersteller = msg:sub(31+1,31+lenMsg)
 print( "hersteller " .. hersteller )
 
 
 PP=299
 L=54
 A=txt:sub(PP,PP+L-1)
- print (A)
+-- print (A)
 meas_key = 'M' .. string.format( "%d", tonumber( A:sub(9,10) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(11,12) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(13,14) ,16) )
 local M180 = tonumber(A:sub(31+6,31+6+16-1), 16) / 10000000
 print( meas_key .. ' wirkarbeit zaehler sum: ' .. string.format( "%.3f", M180 ) .. " kWh" )
@@ -92,7 +92,7 @@ print( meas_key .. ' wirkarbeit zaehler sum: ' .. string.format( "%.3f", M180 ) 
 PP=PP+L
 L=48
 A=txt:sub(PP,PP+L-1)
- print ( A )
+-- print ( A )
 meas_key = 'M' .. string.format( "%d", tonumber( A:sub(9,10) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(11,12) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(13,14) ,16) )
 local M170 = tonumber(A:sub(31,31+16-1), 16) / 100
 print( meas_key .. ' 16.7.0 wirkleistung summe L1 + L2 + L3 ' .. string.format( "%.3f", M170 ) .. " W " )
@@ -100,7 +100,7 @@ print( meas_key .. ' 16.7.0 wirkleistung summe L1 + L2 + L3 ' .. string.format( 
 PP=PP+L
 L=48
 A=txt:sub(PP,PP+L-1)
- print ( A )
+-- print ( A )
 meas_key = 'M' .. string.format( "%d", tonumber( A:sub(9,10) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(11,12) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(13,14) ,16) )
 local M3670 = tonumber(A:sub(31,31+16-1), 16) / 100
 print( meas_key .. ' 36.7.0 wirkleistung L1 ' .. string.format( "%.3f", M3670 ) .. " W" )
@@ -108,7 +108,7 @@ print( meas_key .. ' 36.7.0 wirkleistung L1 ' .. string.format( "%.3f", M3670 ) 
 PP=PP+L
 L=48
 A=txt:sub(PP,PP+L-1)
- print ( A )
+-- print ( A )
 meas_key = 'M' .. string.format( "%d", tonumber( A:sub(9,10) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(11,12) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(13,14) ,16) )
 local M5670 = tonumber(A:sub(31,31+16-1), 16) / 100
 print( meas_key .. ' 56.7.0 wirkleistung L2 ' .. string.format( "%.3f", M5670 ) .. " W" )
@@ -116,7 +116,7 @@ print( meas_key .. ' 56.7.0 wirkleistung L2 ' .. string.format( "%.3f", M5670 ) 
 PP=PP+L
 L=48
 A=txt:sub(PP,PP+L-1)
- print ( A )
+-- print ( A )
 meas_key = 'M' .. string.format( "%d", tonumber( A:sub(9,10) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(11,12) ,16) ) .. '.' .. string.format( "%d", tonumber( A:sub(13,14) ,16) )
 local M7670 = tonumber(A:sub(31,31+16-1), 16) / 100
 print( meas_key .. ' 76.7.0 wirkleistung L3 ' .. string.format( "%.3f", M7670 ) .. " W" )
@@ -160,10 +160,10 @@ myDatum = os.date("%Y-%m-%d")
 -- store tageswert extern on database
 --print( myDatum )
 
-local cmd = "wget http://conil/strom/eingabe.php?datum=" .. myDatum .. "\\&licht=" .. string.format( "%.3f", M180 ) .. "\\&heiz= -q  "
+local cmd = "wget http://conil/strom/eingabe.php?datum=" .. myDatum .. "\\&licht=" .. string.format( "%.3f", M180 ) .. "\\&heiz= -q -O /run/user/1000/easymeter.txt"
 print(' speicher tageswert ' .. cmd)
 assert(os.execute( cmd ))
-
+os.execute("chmod a+rw /run/user/1000/easymeter.txt")
 
 -- send values via mqtt to openhab
 
